@@ -6,18 +6,18 @@ const options = {
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
-  onClose(selectedDates) {
+  onClose: (selectedDates) => {
     const selectedDate = selectedDates[0];
     const currentDate = new Date();
+    const startButton = document.querySelector("[data-start]");
 
     if (selectedDate <= currentDate) {
       window.alert("Please choose a date in the future");
+      startButton.disabled = true;
       return;
+    } else {
+      startButton.disabled = false; 
     }
-
-    const startButton = document.querySelector("[data-start]");
-    startButton.removeAttribute("disabled");
-    debugger;
   },
 };
 
@@ -68,43 +68,9 @@ startButton.addEventListener("click", () => {
   startCountdown(selectedDate);
   startButton.setAttribute("disabled", "disabled");
 });
-const datetimePicker = flatpickr("#datetime-picker", options);
 
-datetimePicker.config.onClose = function (selectedDates) {
-  const selectedDate = selectedDates[0];
 
-  if (selectedDate < new Date()) {
-    notiflix.Notify.warning("Please choose a date in the future");
-    startButton.disabled = true;
-  } else {
-    startButton.disabled = false;
-  }
-};
-
-startButton.addEventListener("click", () => {
-  const selectedDate = datetimePicker.selectedDates[0];
-  startCountdown(selectedDate);
-  startButton.disabled = true;
-});
-function startCountdown(endDate) {
-  const intervalId = setInterval(() => {
-    const currentDate = new Date();
-    const timeDiff = endDate - currentDate;
-
-    if (timeDiff <= 0) {
-      clearInterval(intervalId);
-      updateTimerDisplay(0, 0, 0, 0);
-      notiflix.Notify.success("Countdown completed!");
-      startButton.disabled = false;
-      return;
-    }
-
-    const { days, hours, minutes, seconds } = convertMs(timeDiff);
-    updateTimerDisplay(days, hours, minutes, seconds);
-  }, 1000);
-}
-
-function updateTimerDisplay(days, hours, minutes, seconds) {
+function updateTimerDisplay({days, hours, minutes, seconds}) {
   daysElement.textContent = addLeadingZero(days);
   hoursElement.textContent = addLeadingZero(hours);
   minutesElement.textContent = addLeadingZero(minutes);
@@ -113,4 +79,13 @@ function updateTimerDisplay(days, hours, minutes, seconds) {
 
 function addLeadingZero(value) {
   return String(value).padStart(2, "0");
+}
+
+function convertMs(ms) {
+  const seconds = Math.floor((ms / 1000) % 60);
+  const minutes = Math.floor((ms / 1000 / 60) % 60);
+  const hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
+  const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+
+  return { days, hours, minutes, seconds };
 }
