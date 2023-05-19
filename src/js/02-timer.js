@@ -62,24 +62,13 @@ function addLeadingZero(value) {
 }
 
 startButton.addEventListener("click", () => {
-  const selectedDate = flatpickr.parseDate(
+  const selectedDate = new Date(
     document.querySelector("#datetime-picker").value
   );
   startCountdown(selectedDate);
   startButton.setAttribute("disabled", "disabled");
 });
 
-
-function updateTimerDisplay({days, hours, minutes, seconds}) {
-  daysElement.textContent = addLeadingZero(days);
-  hoursElement.textContent = addLeadingZero(hours);
-  minutesElement.textContent = addLeadingZero(minutes);
-  secondsElement.textContent = addLeadingZero(seconds);
-}
-
-function addLeadingZero(value) {
-  return String(value).padStart(2, "0");
-}
 
 function convertMs(ms) {
   const seconds = Math.floor((ms / 1000) % 60);
