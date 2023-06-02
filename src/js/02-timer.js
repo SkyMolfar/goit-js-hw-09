@@ -1,5 +1,7 @@
+// Описаний в документації
 import flatpickr from "flatpickr";
-import "flatpickr/dist/flatpickr.css";
+// Додатковий імпорт стилів
+import "flatpickr/dist/flatpickr.min.css";
 
 const options = {
   enableTime: true,
